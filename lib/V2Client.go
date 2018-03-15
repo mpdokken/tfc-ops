@@ -81,8 +81,18 @@ func CreateV2Variable(organization, workspaceName, tfToken string, tfVar TFVar) 
 
 // CreateAllV2Variables makes several v2 terraform vars api posts to create
 // variables for a given organization and v2 workspace
-func CreateAllV2Variables(organization, workspaceName, tfToken string, tfVars []TFVar) {
+func CreateAllV2Variables(
+	organization, workspaceName, tfToken, legacyOrg string,
+	tfVars []TFVar,
+) {
 	for _, nextVar := range tfVars {
+
+		valueParts := strings.Split(nextVar.Value, "/")
+		if len(valueParts) >= 2 && valueParts[0] == legacyOrg {
+			valueParts[0] = organization
+			nextVar.Value = strings.Join(valueParts, "/")
+		}
+
 		CreateV2Variable(organization, workspaceName, tfToken, nextVar)
 	}
 }
@@ -152,7 +162,7 @@ func CreateAndPopulateV2Workspace(
 
 	CreateV2Workspace(mp, tfToken, vcsTokenID)
 
-	CreateAllV2Variables(mp.NewOrg, mp.NewName, tfToken, v1Vars)
+	CreateAllV2Variables(mp.NewOrg, mp.NewName, tfToken, mp.LegacyOrg, v1Vars)
 	sensitiveVars := []string{}
 	sensitiveValue := "TF_ENTERPRISE_SENSITIVE_VAR"
 
