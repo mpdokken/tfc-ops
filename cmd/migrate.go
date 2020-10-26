@@ -27,7 +27,7 @@ var vcsUsername string
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "Perform migration plan",
-	Long:  `Processes plan.csv to validate migration plan and peform the work`,
+	Long:  `Processes plan.csv to validate migration plan and perform the work`,
 	Args:  cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		if vcsUsername == "" {
@@ -43,9 +43,9 @@ func init() {
 	migrateCmd.Flags().StringVarP(
 		&vcsUsername,
 		"vcs-username",
-		"v",
+		"u",
 		"",
-		`Name of the VCS User in TF Enterprise (new version) to allow us to get the right VCS Token ID`,
+		`Name of the VCS User in TF Enterprise (new version) to allow us to get the right VCS Token ID (the GitHub or Bitbucket username used to connect TFE)`,
 	)
 	migrateCmd.Flags().StringVarP(&planFile, "file", "f", "plan.csv", "optional - Name of migration plan CSV file")
 }
